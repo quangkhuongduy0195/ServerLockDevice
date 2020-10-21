@@ -9,11 +9,16 @@ var devices = [];
 io.on('connection', function (socket) {
     console.log('Welcome to server: '+ PORT);
 
-    socket.broadcast.emit("connected", "You connected");
+    socket.broadcast.emit("ping", "You connected");
 
     socket.on('lock', function (data) {
         console.log(data);
         io.sockets.emit('lock', data);
+    });
+
+    socket.on('unlock', function (data) {
+        console.log(data);
+        io.sockets.emit('unlock', data);
     });
 
     socket.on("deviceId", function(data){
