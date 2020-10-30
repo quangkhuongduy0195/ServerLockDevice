@@ -18,6 +18,7 @@
   "homepage": "https://github.com/quangkhuongduy0195/ServerLockDevice#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "node-localstorage": "^2.1.6",
     "socket.io": "^2.3.0"
   }
 }
