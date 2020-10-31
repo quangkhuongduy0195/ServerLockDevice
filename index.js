@@ -9,26 +9,59 @@ const PORT = process.env.PORT || 3000;
 var localStorage = new LocalStorage('./device');
 var clientConnects = 0;
 var storage = require('./stores/local');
+var keys = require('./common/keys');
 //Tạo socket 
 io.on('connection', function (socket) {
     clientConnects++;
     console.log('Welcome to server: '+ clientConnects);
     socket.broadcast.emit("ping", "You connected");
     localStorage.clear();
-    socket.on('lock', function (data) {
-        console.log(data);
-        var listDevice = localStorage.getItem('devices');
-        var listDeviceObject = JSON.parse(listDevice);
-        console.log(listDeviceObject.deviceName);
-        io.sockets.emit('lock', listDevice);
+    
+    // ------------------------------------------------------------------------------------------------------------------
+    // Lock the device
+    socket.on(keys.socket.on.lock, function (data) {
+        var deviceId = data.id;
+        if(!storage.isLock(deviceId))
+        {
+            storage.addLock(deviceId);
+        }
+        var isLock = {
+            lock : storage.isLock(deviceId),
+            deviceId: deviceId,
+            message: data.message
+        };
+        console.log(isLock);
+        io.sockets.emit(keys.socket.emit.lockDevice, isLock)
     });
 
-    socket.on('unlock', function (data) {
-        console.log(data);
-        io.sockets.emit('unlock', data);
+    // ------------------------------------------------------------------------------------------------------------------
+    // Check the device is locked
+    socket.on(keys.socket.on.isLock, function (data) {
+        var deviceId = data.id;
+        var isLock = {
+            lock : storage.isLock(deviceId)
+        };
+        socket.emit(keys.socket.emit.isLock, isLock)
     });
 
-    socket.on("deviceId", function(data){
+    // ------------------------------------------------------------------------------------------------------------------
+    // Unlock the device
+    socket.on(keys.socket.on.unlock, function (data) {
+        var deviceId = data.id;
+        if(storage.isLock(deviceId))
+        {
+            storage.unLock(deviceId);
+        }
+        var unLock = {
+            lock : storage.isLock(deviceId),
+            deviceId: deviceId
+        };
+        io.sockets.emit(keys.socket.emit.unlockDevice, unLock)
+    });
+
+    // ------------------------------------------------------------------------------------------------------------------
+    // Add device if new device else return
+    socket.on(keys.socket.on.deviceInfo, function(data){
         console.log(data.id);
         var deviceId = data.id;
         if(!storage.isExistDevice(deviceId)){

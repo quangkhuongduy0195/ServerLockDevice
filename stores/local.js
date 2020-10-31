@@ -1,25 +1,29 @@
 var { LocalStorage } = require('node-localstorage');
+var keys = require('../common/keys');
 var localStorage = new LocalStorage('./device');
 
 function addDeviceToStore(deviceInfo, io) {
-    var listDevices = JSON.parse(localStorage.getItem('devices'));
+    var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
     console.log(listDevices);
     var listDevice = [];
     if (listDevices != null) {
         listDevice = listDevices.devices;
     }
+    deviceInfo['isLock'] = false;
+    deviceInfo['assign'] = "DuyQK";
+    deviceInfo['dateAssign'] = "10/10/2010";
     listDevice.push(deviceInfo);
     var devices = {
         devices: listDevice
     }
-    localStorage.setItem('devices', JSON.stringify(devices));
-    listDevices = JSON.parse(localStorage.getItem('devices'));
+    localStorage.setItem(keys.storage.devices, JSON.stringify(devices));
+    listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
     console.log(listDevices)
-    io.sockets.emit('addDevice', listDevices);
+    io.sockets.emit(keys.socket.emit.addDevice, listDevices);
 }
 
 function isExistDevice(deviceId) {
-    var listDevices = JSON.parse(localStorage.getItem('devices'));
+    var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
     if (listDevices != null) {
         for (const device of listDevices.devices) {
             if (device.id === deviceId) {
@@ -35,11 +39,11 @@ function isExistDevice(deviceId) {
 
 function isLock(deviceId) {
     if (isExistDevice(deviceId)) {
-        var listDeviceLocks = JSON.parse(localStorage.getItem('lock'));
-        if (listDeviceLocks != null) {
-            for (const device of listDeviceLocks.deivces) {
+        var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
+        if (listDevices != null) {
+            for (const device of listDevices.devices) {
                 if (device.id === deviceId) {
-                    return true;
+                    return device.isLock;
                 }
             }
             return false;
@@ -48,23 +52,35 @@ function isLock(deviceId) {
     } else
         return false;
 }
+
+
 function addLock(deviceId) {
-    var listDeviceLocks = JSON.parse(localStorage.getItem('lock'));
-    var locks = [];
-    if (listDeviceLocks != null) {
-        locks = listDeviceLocks.devices;
+    var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
+    var devices = listDevices.devices;
+    for (var i in listDevices.devices) {
+        if(listDevices.devices[i].id === deviceId){
+            listDevices.devices[i].isLock = true;
+        }
     }
-    locks.push(deviceId);
-    var devices = {
-        devices: listDevice
+    localStorage.setItem(keys.storage.devices, JSON.stringify(listDevices));
+}
+
+
+function unLock(deviceId) {
+    var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
+    var devices = listDevices.devices;
+    for (var i in listDevices.devices) {
+        if(listDevices.devices[i].id === deviceId){
+            listDevices.devices[i].isLock = false;
+        }
     }
-    localStorage.setItem('lock', JSON.stringify(devices));
-    listDeviceLocks = JSON.parse(localStorage.getItem('lock'));
-    console.log(listDeviceLocks)
-    io.sockets.emit('lockDevice', listDeviceLocks);
+    localStorage.setItem(keys.storage.devices, JSON.stringify(listDevices));
 }
 
 module.exports = {
     addDeviceToStore: addDeviceToStore,
-    isExistDevice: isExistDevice
+    isExistDevice: isExistDevice,
+    isLock : isLock,
+    addLock : addLock,
+    unLock : unLock
 }
