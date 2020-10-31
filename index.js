@@ -15,8 +15,6 @@ io.on('connection', function (socket) {
     clientConnects++;
     console.log('Welcome to server: ' + clientConnects);
     socket.broadcast.emit("ping", "You connected");
-    localStorage.clear();
-
     // ------------------------------------------------------------------------------------------------------------------
     // Lock the device
     socket.on(keys.socket.on.lock, function (dt) {
