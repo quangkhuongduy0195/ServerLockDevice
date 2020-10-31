@@ -45,7 +45,9 @@ io.on('connection', function (socket) {
             var data = JSON.parse(dt);
             var deviceId = data.id;
             var isLock = {
-                lock: storage.isLock(deviceId)
+                lock: storage.isLock(deviceId),
+                deviceId: deviceId,
+                message: ""
             };
             socket.emit(keys.socket.emit.isLock, isLock)
         } catch (ex) {
