@@ -56,13 +56,15 @@ function isLock(deviceId) {
 
 function addLock(deviceId) {
     var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
-    var devices = listDevices.devices;
-    for (var i in listDevices.devices) {
-        if(listDevices.devices[i].id === deviceId){
-            listDevices.devices[i].isLock = true;
+    if (listDevices != null) {
+        var devices = listDevices.devices;
+        for (var i in listDevices.devices) {
+            if (listDevices.devices[i].id === deviceId) {
+                listDevices.devices[i].isLock = true;
+            }
         }
+        localStorage.setItem(keys.storage.devices, JSON.stringify(listDevices));
     }
-    localStorage.setItem(keys.storage.devices, JSON.stringify(listDevices));
 }
 
 
@@ -70,7 +72,7 @@ function unLock(deviceId) {
     var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
     var devices = listDevices.devices;
     for (var i in listDevices.devices) {
-        if(listDevices.devices[i].id === deviceId){
+        if (listDevices.devices[i].id === deviceId) {
             listDevices.devices[i].isLock = false;
         }
     }
@@ -80,7 +82,7 @@ function unLock(deviceId) {
 module.exports = {
     addDeviceToStore: addDeviceToStore,
     isExistDevice: isExistDevice,
-    isLock : isLock,
-    addLock : addLock,
-    unLock : unLock
+    isLock: isLock,
+    addLock: addLock,
+    unLock: unLock
 }
