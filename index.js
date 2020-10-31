@@ -19,7 +19,8 @@ io.on('connection', function (socket) {
     
     // ------------------------------------------------------------------------------------------------------------------
     // Lock the device
-    socket.on(keys.socket.on.lock, function (data) {
+    socket.on(keys.socket.on.lock, function (dt) {
+        var data = JSON.parse(dt);
         var deviceId = data.id;
         if(!storage.isLock(deviceId))
         {
@@ -36,7 +37,8 @@ io.on('connection', function (socket) {
 
     // ------------------------------------------------------------------------------------------------------------------
     // Check the device is locked
-    socket.on(keys.socket.on.isLock, function (data) {
+    socket.on(keys.socket.on.isLock, function (dt) {
+        var data = JSON.parse(dt);
         var deviceId = data.id;
         var isLock = {
             lock : storage.isLock(deviceId)
@@ -46,7 +48,8 @@ io.on('connection', function (socket) {
 
     // ------------------------------------------------------------------------------------------------------------------
     // Unlock the device
-    socket.on(keys.socket.on.unlock, function (data) {
+    socket.on(keys.socket.on.unlock, function (dt) {
+        var data = JSON.parse(dt);
         var deviceId = data.id;
         if(storage.isLock(deviceId))
         {
@@ -61,7 +64,8 @@ io.on('connection', function (socket) {
 
     // ------------------------------------------------------------------------------------------------------------------
     // Add device if new device else return
-    socket.on(keys.socket.on.deviceInfo, function(data){
+    socket.on(keys.socket.on.deviceInfo, function(dt){
+        var data = JSON.parse(dt);
         console.log(data.id);
         var deviceId = data.id;
         if(!storage.isExistDevice(deviceId)){
