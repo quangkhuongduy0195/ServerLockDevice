@@ -5,6 +5,7 @@ const emit = {
     removeDevice : "removeDevice",
     isLock : "isLock",
     lockDevice : "lockDevice",
+    devices : 'devices',
 }
 
 const storage = {
@@ -16,7 +17,8 @@ const on = {
     deviceInfo : 'deviceInfo',
     lock : 'lock',
     unlock : "unlock",
-    isLock : "isLock"
+    isLock : "isLock",
+    devices : 'devices',
 }
 
 module.exports =  {

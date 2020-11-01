@@ -57,7 +57,6 @@ function isLock(deviceId) {
 function addLock(deviceId) {
     var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
     if (listDevices != null) {
-        var devices = listDevices.devices;
         for (var i in listDevices.devices) {
             if (listDevices.devices[i].id === deviceId) {
                 listDevices.devices[i].isLock = true;
@@ -70,7 +69,6 @@ function addLock(deviceId) {
 
 function unLock(deviceId) {
     var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
-    var devices = listDevices.devices;
     for (var i in listDevices.devices) {
         if (listDevices.devices[i].id === deviceId) {
             listDevices.devices[i].isLock = false;
@@ -79,10 +77,19 @@ function unLock(deviceId) {
     localStorage.setItem(keys.storage.devices, JSON.stringify(listDevices));
 }
 
+function devices(){
+    var listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
+    if(listDevices != null){
+        return listDevices;
+    }
+    return {};
+}
+
 module.exports = {
     addDeviceToStore: addDeviceToStore,
     isExistDevice: isExistDevice,
     isLock: isLock,
     addLock: addLock,
-    unLock: unLock
+    unLock: unLock,
+    devices: devices
 }

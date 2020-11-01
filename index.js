@@ -87,6 +87,17 @@ io.on('connection', function (socket) {
             console.log(ex.message)
         }
     });
+
+    socket.on(keys.socket.on.devices, function (dt) {
+        try {
+            var devices =  storage.devices();
+            console.log("devices: " + devices);
+            socket.emit(keys.socket.emit.devices, devices);
+        } catch (ex) {
+            console.log(ex.message)
+        }
+    });
+
 });
 //Khởi tạo 1 server listen tại 1 port
 server.listen(PORT);
