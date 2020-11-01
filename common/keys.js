@@ -19,6 +19,7 @@ const on = {
     unlock : "unlock",
     isLock : "isLock",
     devices : 'devices',
+    codeUnlock : 'codeUnlock',
 }
 
 module.exports =  {

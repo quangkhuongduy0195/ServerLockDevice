@@ -7,14 +7,23 @@ var { LocalStorage } = require('node-localstorage');
 const { Console } = require("console");
 const PORT = process.env.PORT || 3000;
 var localStorage = new LocalStorage('./device');
-var clientConnects = 0;
 var storage = require('./stores/local');
 var keys = require('./common/keys');
+// localStorage.clear();
+var clientConnects = 0;
+var codeUnlock = "111111";
+
 //Tạo socket 
 io.on('connection', function (socket) {
+    socket.on('disconnect', function() {
+        if (clientConnects > 0)
+            clientConnects--;
+        console.log('Welcome to server: ' + clientConnects);
+    });
     clientConnects++;
     console.log('Welcome to server: ' + clientConnects);
     socket.broadcast.emit("ping", "You connected");
+    
     // ------------------------------------------------------------------------------------------------------------------
     // Lock the device
     socket.on(keys.socket.on.lock, function (dt) {
@@ -93,6 +102,25 @@ io.on('connection', function (socket) {
             var devices =  storage.devices();
             console.log("devices: " + devices);
             socket.emit(keys.socket.emit.devices, devices);
+        } catch (ex) {
+            console.log(ex.message)
+        }
+    });
+
+    socket.on(keys.socket.on.codeUnlock, function (dt) {
+        try {
+            var data = JSON.parse(dt);
+            console.log(data.codeUnlock);
+            if(codeUnlock == data.codeUnlock){
+                storage.unLock(data.id);
+                if(!storage.isLock(data.id)){
+                    var unLock = {
+                        lock: false,
+                        deviceId: data.id
+                    };
+                    io.sockets.emit(keys.socket.emit.unlockDevice, unLock)
+                }
+            }
         } catch (ex) {
             console.log(ex.message)
         }

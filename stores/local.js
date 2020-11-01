@@ -19,7 +19,7 @@ function addDeviceToStore(deviceInfo, io) {
     localStorage.setItem(keys.storage.devices, JSON.stringify(devices));
     listDevices = JSON.parse(localStorage.getItem(keys.storage.devices));
     console.log(listDevices)
-    io.sockets.emit(keys.socket.emit.addDevice, listDevices);
+    io.sockets.emit(keys.socket.emit.addDevice, deviceInfo);
 }
 
 function isExistDevice(deviceId) {
