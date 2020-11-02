@@ -35,7 +35,7 @@ io.on('connection', function (socket) {
             }
             var isLock = {
                 lock: storage.isLock(deviceId),
-                deviceId: deviceId,
+                id: deviceId,
                 message: data.message
             };
             console.log(isLock);
@@ -53,7 +53,7 @@ io.on('connection', function (socket) {
             var deviceId = data.id;
             var isLock = {
                 lock: storage.isLock(deviceId),
-                deviceId: deviceId,
+                id: deviceId,
                 message: ""
             };
             socket.emit(keys.socket.emit.isLock, isLock)
@@ -73,7 +73,7 @@ io.on('connection', function (socket) {
             }
             var unLock = {
                 lock: storage.isLock(deviceId),
-                deviceId: deviceId
+                id: deviceId
             };
             io.sockets.emit(keys.socket.emit.unlockDevice, unLock)
         } catch (ex) {
@@ -116,7 +116,7 @@ io.on('connection', function (socket) {
                 if(!storage.isLock(data.id)){
                     var unLock = {
                         lock: false,
-                        deviceId: data.id
+                        id: data.id
                     };
                     io.sockets.emit(keys.socket.emit.unlockDevice, unLock)
                 }
