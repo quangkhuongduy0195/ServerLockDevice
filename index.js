@@ -11,7 +11,7 @@ var storage = require('./stores/local');
 var keys = require('./common/keys');
 // localStorage.clear();
 var clientConnects = 0;
-var codeUnlock = "111111";
+var codeUnlock = "110011";
 
 //Tạo socket 
 io.on('connection', function (socket) {
